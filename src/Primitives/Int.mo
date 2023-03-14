@@ -13,7 +13,6 @@ import Debug "mo:base/Debug";
 import Binary "mo:encoding/Binary";
 import Struct "../Struct";
 import Tag "../Tags";
-import Debug "mo:base/Debug";
 
 module {
 
