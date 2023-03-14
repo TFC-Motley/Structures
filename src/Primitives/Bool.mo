@@ -3,6 +3,7 @@ import BaseLib "mo:base/Bool";
 import Option "mo:base/Option";
 import Struct "../Struct";
 import Tag "../Tags";
+import Debug "mo:base/Debug";
 
 module {
 
@@ -20,6 +21,7 @@ module {
   };
 
   public func toStruct( bool : Bool ) : Struct {
+    Debug.print("Bool");
     let value : Nat8 = if bool 1 else 0;
     Struct.build(?Tag.bool, ?Nat32.fromNat(1), ?#array( [value] ))
   };
