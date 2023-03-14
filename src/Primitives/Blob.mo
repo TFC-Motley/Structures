@@ -3,6 +3,7 @@ import BaseLib "mo:base/Blob";
 import Option "mo:base/Option";
 import Struct "../Struct";
 import Tag "../Tags";
+import Debug "mo:base/Debug";
 
 module {
 
@@ -17,6 +18,7 @@ module {
   public func valid( s : Struct ) : Bool { Struct.Tag.equal(s, Tag.blob ) };
 
   public func toStruct( blob : Blob ) : Struct {
+    Debug.print("Blob");
     Struct.build(?Tag.blob, ?Nat32.fromNat(blob.size()), ?#blob( blob ))
   };
 
