@@ -13,6 +13,7 @@ import Debug "mo:base/Debug";
 import Binary "mo:encoding/Binary";
 import Struct "../Struct";
 import Tag "../Tags";
+import Debug "mo:base/Debug";
 
 module {
 
@@ -30,6 +31,7 @@ module {
   };
 
   public func toStruct( int : Int ) : Struct {
+    Debug.print("Int");
     let nat : Nat = BaseLib.abs( int );
     let flag : Nat8 = if ( int < 0 ) 1 else 0;
     let (size, value) : (Nat, [Nat8]) = 
