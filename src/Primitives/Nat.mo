@@ -10,6 +10,7 @@ import Option "mo:base/Option";
 import Binary "mo:encoding/Binary";
 import Struct "../Struct";
 import Tag "../Tags";
+import Debug "mo:base/Debug";
 
 module {
 
@@ -27,6 +28,7 @@ module {
   };
 
   public func toStruct( nat : Nat ) : Struct {
+    Debug.print("Nat");
     let (size, value) : (Nat, [Nat8]) = 
       if ( nat <= 255 ) (1, [Nat8.fromNat( nat )])
       else if ( nat <= 65535 ) (2, Binary.BigEndian.fromNat16( Nat16.fromNat( nat ) ))
