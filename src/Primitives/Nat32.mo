@@ -1,7 +1,7 @@
 import BaseLib "mo:base/Nat32";
 import Binary "mo:encoding/Binary";
 import Struct "../Struct";
-import { Nat32 } "../Tags";
+import Tag "../Tags";
 
 module {
 
@@ -11,19 +11,19 @@ module {
   type Length = Struct.Length;
   type Value = Struct.Value;
   
-  public func tag() : Tag { Nat32.tag() };
+  public func tag() : Tag { Tag.nat32 };
 
   public func valid( s : Struct ) : Bool {
-    if ( Struct.Tag.notEqual(s, Nat32.tag()) ) false
+    if ( Struct.Tag.notEqual(s, Tag.nat32) ) false
     else Struct.Value.length(s) == 4
   };
 
   public func toStruct( nat32 : Nat32 ) : Struct {
-    Struct.build(?Nat32.tag(), ?4, ?#array( Binary.BigEndian.fromNat32( nat32 ) ))
+    Struct.build(?Tag.nat32, ?4, ?#array( Binary.BigEndian.fromNat32( nat32 ) ))
   };
 
   public func fromStruct( s : Struct ) : ?Nat32 {
-    if ( Struct.Tag.notEqual(s, Nat32.tag()) ) return null;
+    if ( Struct.Tag.notEqual(s, Tag.nat32) ) return null;
     if ( Struct.Value.length( s ) != 4 ) Struct.trap("Incorrect length for Type<Nat32>");
     ?Binary.BigEndian.toNat32( Struct.Value.toArray(s) );
   }

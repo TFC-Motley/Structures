@@ -9,7 +9,7 @@ import BaseLib "mo:base/Nat";
 import Option "mo:base/Option";
 import Binary "mo:encoding/Binary";
 import Struct "../Struct";
-import { Nat } "../Tags";
+import Tag "../Tags";
 
 module {
 
@@ -19,10 +19,10 @@ module {
   type Length = Struct.Length;
   type Value = Struct.Value;
   
-  public func tag() : Tag { Nat.tag() };
+  public func tag() : Tag { Tag.nat };
 
   public func valid( s : Struct ) : Bool {
-    if ( Struct.Tag.notEqual(s, Nat.tag()) ) false
+    if ( Struct.Tag.notEqual(s, Tag.nat) ) false
     else Struct.Value.length(s) > 0
   };
 
@@ -36,11 +36,11 @@ module {
         let blob : Blob = Text.encodeUtf8( BaseLib.toText( nat ) );
         (blob.size(), Blob.toArray(blob))
       };
-    Struct.build(?Nat.tag(), ?Nat32.fromNat(size), ?#array( value ))
+    Struct.build(?Tag.nat, ?Nat32.fromNat(size), ?#array( value ))
   };
 
   public func fromStruct( s : Struct ) : ?Nat {
-    if ( Struct.Tag.notEqual(s, Nat.tag()) ) return null;
+    if ( Struct.Tag.notEqual(s, Tag.nat) ) return null;
     if ( Struct.Value.length( s ) == 0 ) Struct.trap("Value field can't be empty for Type<Nat>"); 
     let bytes : [Nat8] = Struct.Value.toArray( s );
     if ( Struct.Value.length(s) == 1 ) ?Nat8.toNat( bytes[0] )

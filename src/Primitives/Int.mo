@@ -12,7 +12,7 @@ import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Binary "mo:encoding/Binary";
 import Struct "../Struct";
-import { Int } "../Tags";
+import Tag "../Tags";
 
 module {
 
@@ -22,10 +22,10 @@ module {
   type Length = Struct.Length;
   type Value = Struct.Value;
   
-  public func tag() : Tag { Int.tag() };
+  public func tag() : Tag { Tag.int };
 
   public func valid( s : Struct ) : Bool {
-    if ( Struct.Tag.notEqual(s, Int.tag()) ) false
+    if ( Struct.Tag.notEqual(s, Tag.int ) ) false
     else Struct.Value.length(s) > 0
   };
 
@@ -41,11 +41,11 @@ module {
         let blob : Blob = Text.encodeUtf8( Nat.toText( nat ) );
         (blob.size(), Blob.toArray(blob))
       };
-    Struct.build(?Int.tag(), ?Nat32.fromNat(size), ?#array( value ))
+    Struct.build(?Tag.int, ?Nat32.fromNat(size), ?#array( value ))
   };
 
   public func fromStruct( s : Struct ) : ?Int {
-    if ( Struct.Tag.notEqual(s, Int.tag()) ) return null;
+    if ( Struct.Tag.notEqual(s, Tag.int) ) return null;
     if ( Struct.Value.length( s ) == 0 ) Struct.trap("Value field can't be empty for Type<Int>"); 
     let bytes : [Nat8] = Struct.Value.toArray( s );
     if ( Struct.Value.length(s) == 2 ) ?unwrap_signed_value(bytes, 1)

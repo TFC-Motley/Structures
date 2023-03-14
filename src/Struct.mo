@@ -7,13 +7,13 @@ import Nat64 "mo:base/Nat64";
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Option "mo:base/Option";
-import { Null } "Tags";
+import T "Tags";
 
 module Struct = {
 
   public type Struct = (Tag, Length, Value);
 
-  public type Tag = Nat32;
+  public type Tag = Nat8;
   public type Length = Nat32;
   public type Value = Blob;
 
@@ -26,7 +26,7 @@ module Struct = {
 
   public module Tag = {
 
-    public func raw( struct : Struct ) : Nat32 { struct.0 };
+    public func raw( struct : Struct ) : Nat8 { struct.0 };
   
     public func set( struct : Struct, tag : Tag ) : Struct { (tag, struct.1, struct.2) };
 
@@ -34,13 +34,9 @@ module Struct = {
 
     public func notEqual( struct : Struct, tag : Tag ) : Bool { struct.0 != tag };
 
-    public func toArray( struct : Struct ) : [Nat8] {
-      Binary.BigEndian.fromNat32( struct.0 )
-    };
+    public func toArray( struct : Struct ) : [Nat8] { [struct.0] };
 
-    public func toVarArray( struct : Struct ) : [var Nat8] {
-      Array.thaw<Nat8>( Binary.BigEndian.fromNat32( struct.0 ) )
-    };
+    public func toVarArray( struct : Struct ) : [var Nat8] { [var struct.0] };
 
   };
 
@@ -107,7 +103,7 @@ module Struct = {
   };
 
   public func build( _tag : ?Tag, _len : ?Length, _val : ?Pattern ) : Struct {
-    let t : Tag = Option.get<Tag>(_tag, Null.tag());
+    let t : Tag = Option.get<Tag>(_tag, T.null_);
     let l : Length = Option.get<Length>(_len, Length.empty);
     let p : Pattern = Option.get<Pattern>(_val, #blob(""));
     let v : Value = switch( p ){
@@ -118,43 +114,5 @@ module Struct = {
     };
     (t,l,v)
   };
-
-  // public func serialize( struct : Struct ) : (Nat, Iter.Iter<Nat8>) {
-  //   var idx : Nat = 0;
-  //   let size : Nat = length( struct );
-  //   let tag : [Nat8] = Tag.toArray( struct );
-  //   let val : [Nat8] = Value.toArray( struct );
-  //   let len : [Nat8] = Length.toArray( struct );
-  //   let payload : [var Nat8] = Array.init<Nat8>(size, 0);
-  //   label l loop {
-  //     if ( idx >= size ) break l;
-  //     if ( idx < 4 ) payload[idx] := tag[idx]
-  //     else if ( idx < 8 ) payload[idx] := len[idx-4]
-  //     else payload[idx] := val[idx-8]
-  //   };
-  //   idx := 0;
-  //   let bytes : [Nat8] = Array.freeze<Nat8>( payload );
-  //   let byteIter = object {
-  //     public func next() : ?Nat8 {
-  //       if (idx >= size) {
-  //         return null
-  //       } else {
-  //         let res = ?(bytes[idx]);
-  //         idx += 1;
-  //         return res
-  //       }
-  //     }
-  //   };
-  //   (size, byteIter)
-  // };
-
-  // public func deserialize( blob : Blob ) : Struct {
-  //   let b : [Nat8] = Blob.toArray(blob);
-  //   let tag : Nat32 = Binary.BigEndian.toNat32([b[0],b[1],b[2],b[3]]);
-  //   let length : Nat32 = Binary.BigEndian.toNat32([b[4],b[5],b[6],b[7]]);
-  //   let value : [var Nat8] = Array.init<Nat8>(Nat32.toNat(length), 0);
-  //   for ( i in Iter.range(12, b.size()-1) ) value[i-12] := b[i];
-  //   (tag, length, Blob.fromArrayMut( value ))
-  // };
 
 }

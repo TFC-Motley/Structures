@@ -2,7 +2,7 @@ import Nat32 "mo:base/Nat32";
 import BaseLib "mo:base/Blob";
 import Option "mo:base/Option";
 import Struct "../Struct";
-import { Blob } "../Tags";
+import Tag "../Tags";
 
 module {
 
@@ -12,16 +12,16 @@ module {
   type Length = Struct.Length;
   type Value = Struct.Value;
   
-  public func tag() : Tag { Blob.tag() };
+  public func tag() : Tag { Tag.blob };
 
-  public func valid( s : Struct ) : Bool { Struct.Tag.equal(s, Blob.tag()) };
+  public func valid( s : Struct ) : Bool { Struct.Tag.equal(s, Tag.blob ) };
 
   public func toStruct( blob : Blob ) : Struct {
-    Struct.build(?Blob.tag(), ?Nat32.fromNat(blob.size()), ?#blob( blob ))
+    Struct.build(?Tag.blob, ?Nat32.fromNat(blob.size()), ?#blob( blob ))
   };
 
   public func fromStruct( s : Struct ) : ?Blob {
-    if ( Struct.Tag.notEqual(s, Blob.tag()) ) return null;
+    if ( Struct.Tag.notEqual(s, Tag.blob) ) return null;
     ?Struct.Value.raw(s);
   }
 
